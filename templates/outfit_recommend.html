@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather & Event Outfit Recommender</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      background: transparent;
+    }
+
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background: rgba(0, 0, 0, 0.3); /* Light opacity */
+      z-index: -1;
+    }
+
+    .container {
+      position: relative;
+      max-width: 400px;
+      margin: 60px auto;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 35px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(6px); /* Subtle blur */
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      animation: floaty 2.5s ease-in-out infinite;
+      color: black;
+      align-items: center;
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      font-size: 16px;
+      color: black;
+      transition: 0.3s ease;
+    }
+
+    button {
+      padding: 12px 22px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(to right, #ffb347, #ffcc33);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .weather-icon {
+      margin-top: 20px;
+    }
+
+    .result-card {
+      margin-top: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      animation: popUp 0.6s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .result-card img {
+      width: 60px;
+      margin-bottom: 10px;
+    }
+
+    @keyframes popUp {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .lottie-box {
+      width: 120px;
+      margin: 0 auto 10px;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        margin: 30px 20px;
+      }
+    }
+
+    @keyframes slideFadeIn {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.card {
+  animation: slideFadeIn 1s ease-out;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.3), transparent);
+  transform: rotate(25deg);
+  pointer-events: none;
+  animation: shine 4s infinite;
+}
+
+@keyframes shine {
+  0% {
+    transform: translate(-100%, -100%) rotate(25deg);
+  }
+  100% {
+    transform: translate(100%, 100%) rotate(25deg);
+  }
+}
+
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <video autoplay muted loop id="bgVideo">
+    <source src="{{ url_for('static', filename='videos/background.mp4') }}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+  <!-- Dark overlay to give contrast to text -->
+  <div class="overlay"></div>
+
+  
+  <!-- Main Glassmorphic Container -->
+  <div class="container">
+    <div class="lottie-box">
+      <lottie-player src="https://lottie.host/9c7e2e07-3b3f-4b3b-a47c-fc1714fce9ae/UeN2Zw4fyR.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    </div>
+    <h1>👗What2Wear?</h1>
+    <form id="recommend-form">
+      <input type="text" id="city" placeholder="Enter Your City" required />
+      <select id="event">
+        <option value="party">Party 🎉</option>
+        <option value="gym">Gym 🏋️‍♀️</option>
+        <option value="formal">Formal 💼</option>
+        <option value="casual">Casual ☕</option>
+        <option value="traditional">Traditional 🪔</option>
+        <option value="date">Date 💘</option>
+      </select>
+      <button type="submit">Get Recommendation</button>
+    </form>
+    <div id="weather" class="weather-icon"></div>
+    <div id="result" class="result-card" style="display:none;">
+      <img id="outfit-icon" src="" alt="Outfit Icon" />
+      <div id="recommendation-text"></div>
+    </div>
+  </div>
+
+  <!-- Sound effect -->
+  <audio id="ding" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" preload="auto"></audio>
+
+  <script>
+    const form = document.getElementById("recommend-form");
+    const weatherDiv = document.getElementById("weather");
+    const resultCard = document.getElementById("result");
+    const recText = document.getElementById("recommendation-text");
+    const outfitIcon = document.getElementById("outfit-icon");
+    const sound = document.getElementById("ding");
+
+    const icons = {
+      party: "https://cdn-icons-png.flaticon.com/512/763/763812.png",
+      gym: "https://cdn-icons-png.flaticon.com/512/883/883407.png",
+      formal: "https://cdn-icons-png.flaticon.com/512/2824/2824806.png",
+      casual: "https://cdn-icons-png.flaticon.com/512/3081/3081559.png",
+      traditional: "https://cdn-icons-png.flaticon.com/512/189/189664.png",
+      date: "https://cdn-icons-png.flaticon.com/512/456/456212.png"
+    };
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const city = document.getElementById("city").value;
+      const event = document.getElementById("event").value;
+
+      const apiKey = 'b83017acca2e0075a5e1722e8a1e30c3';
+      const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`);
+      const weatherData = await weatherRes.json();
+
+      if (weatherData.cod === 200) {
+        const weatherIcon = weatherData.weather[0].icon;
+        const iconUrl = `http://openweathermap.org/img/wn/${weatherIcon}@2x.png`;
+        weatherDiv.innerHTML = `<img src="${iconUrl}" alt="weather icon">`;
+
+        const res = await fetch("/recommend-outfit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ city, event })
+        });
+
+        const data = await res.json();
+
+        recText.textContent = data.recommendation;
+        outfitIcon.src = icons[event];
+        resultCard.style.display = "block";
+        sound.play();
+      } else {
+        weatherDiv.textContent = "City not found.";
+        resultCard.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>

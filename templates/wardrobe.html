@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Wardrobe Organizer</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:url("{{ url_for('static', filename='images/multi_back.jpg') }}");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+padding:30px;
+}
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.45);
+z-index:-1;
+}
+
+.title{
+text-align:center;
+font-size:3rem;
+font-weight:bold;
+color:white;
+margin-bottom:30px;
+text-shadow:0 0 20px #ff69b4;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{
+text-shadow:0 0 10px #ff69b4;
+}
+to{
+text-shadow:0 0 30px #00ffff;
+}
+}
+
+.upload-card{
+max-width:900px;
+margin:auto;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(15px);
+padding:30px;
+border-radius:25px;
+box-shadow:0 8px 35px rgba(0,0,0,0.4);
+}
+
+form{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:15px;
+flex-wrap:wrap;
+}
+
+input[type="file"]{
+background:white;
+padding:10px;
+border-radius:10px;
+}
+
+select{
+padding:12px;
+border:none;
+border-radius:12px;
+font-size:15px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:30px;
+background:linear-gradient(45deg,#ff4e8d,#ff9a44);
+color:white;
+font-weight:bold;
+cursor:pointer;
+transition:.4s;
+}
+
+button:hover{
+transform:translateY(-4px) scale(1.05);
+box-shadow:0 0 20px hotpink;
+}
+
+.search-box{
+margin-top:25px;
+text-align:center;
+}
+
+.search-box input{
+width:300px;
+padding:12px;
+border:none;
+border-radius:25px;
+font-size:16px;
+}
+
+.gallery-title{
+text-align:center;
+margin-top:40px;
+color:white;
+font-size:2rem;
+}
+
+.gallery{
+column-count:4;
+column-gap:20px;
+padding:20px;
+}
+
+.card{
+display:inline-block;
+width:100%;
+margin-bottom:20px;
+}
+
+.card{
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(12px);
+border-radius:20px;
+overflow:hidden;
+transition:.4s;
+box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+
+.card:hover{
+transform:translateY(-10px) scale(1.03);
+box-shadow:0 0 30px #ff69b4;
+}
+
+.card img{
+width:220px;
+height:220px;
+object-fit:contain;
+padding:10px;
+margin:auto;
+display:block;
+border-radius:15px;
+background:white;
+}
+
+.card-body{
+padding:15px;
+text-align:center;
+color:white;
+}
+
+.category{
+font-size:1.1rem;
+font-weight:bold;
+color:#ffd700;
+}
+
+.back-btn{
+display:block;
+width:250px;
+margin:40px auto;
+text-align:center;
+text-decoration:none;
+padding:15px;
+border-radius:30px;
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+color:white;
+font-weight:bold;
+transition:.4s;
+}
+
+.delete-btn{
+display:inline-block;
+margin-top:10px;
+padding:8px 16px;
+background:#ff4d4d;
+color:white;
+text-decoration:none;
+border-radius:20px;
+}
+
+.delete-btn:hover{
+background:#cc0000;
+}
+
+.back-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px cyan;
+}
+
+@media(max-width:1200px){
+.gallery{
+column-count:3;
+}
+}
+
+@media(max-width:768px){
+.gallery{
+column-count:2;
+}
+}
+
+@media(max-width:500px){
+.gallery{
+column-count:1;
+}
+}
+
+.stats-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:20px;
+margin:40px 0;
+}
+
+.stat-card{
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(12px);
+padding:20px;
+border-radius:20px;
+text-align:center;
+color:white;
+box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+
+.stat-card h3{
+font-size:2rem;
+color:#ffd700;
+}
+
+.filter-chips{
+display:flex;
+justify-content:center;
+gap:12px;
+flex-wrap:wrap;
+margin-bottom:30px;
+}
+
+.chip{
+padding:10px 20px;
+border-radius:25px;
+background:rgba(255,255,255,0.2);
+color:white;
+text-decoration:none;
+font-weight:bold;
+}
+
+.chip:hover{
+background:#ff69b4;
+}
+
+.action-buttons{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-top:15px;
+}
+
+.favorite-btn{
+padding:8px 16px;
+border-radius:20px;
+background:#ff69b4;
+color:white;
+text-decoration:none;
+}
+
+.favorite-btn:hover{
+background:#ff1493;
+}
+
+.card img{
+width:100%;
+height:auto;
+max-height:220px;
+object-fit:contain;
+background:white;
+padding:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<h1 class="title">
+👗 AI Wardrobe Organizer
+</h1>
+
+<div class="upload-card">
+
+<form action="/wardrobe" method="POST" enctype="multipart/form-data">
+
+<input type="file" name="cloth" required>
+
+<select name="category">
+
+<option value="tops">👕 Tops</option>
+
+<option value="bottoms">👖 Bottoms</option>
+
+<option value="dresses">👗 Dresses</option>
+
+<option value="shoes">👟 Shoes</option>
+
+<option value="accessories">👜 Accessories</option>
+
+</select>
+
+<button type="submit">
+⬆ Upload Outfit
+</button>
+
+</form>
+
+<div class="search-box">
+
+<form method="GET">
+
+<input
+type="text"
+name="search"
+placeholder="🔍 Search category..."
+>
+
+<button>
+Search
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+<div class="stats-container">
+
+<div class="stat-card">
+<h3>{{ stats.total }}</h3>
+<p>Total Outfits</p>
+</div>
+
+<div class="stat-card">
+<h3>{{ stats.tops }}</h3>
+<p>👕 Tops</p>
+</div>
+
+<div class="stat-card">
+<h3>{{ stats.bottoms }}</h3>
+<p>👖 Bottoms</p>
+</div>
+
+<div class="stat-card">
+<h3>{{ stats.dresses }}</h3>
+<p>👗 Dresses</p>
+</div>
+
+<div class="stat-card">
+<h3>{{ stats.shoes }}</h3>
+<p>👟 Shoes</p>
+</div>
+
+<div class="stat-card">
+<h3>{{ stats.accessories }}</h3>
+<p>👜 Accessories</p>
+</div>
+
+<div class="stat-card">
+<h3>{{ stats.favorites }}</h3>
+<p>❤️ Favorites</p>
+</div>
+
+</div>
+
+<h2 class="gallery-title">
+✨ My Digital Wardrobe
+</h2>
+
+<div class="filter-chips">
+
+<a href="/wardrobe" class="chip">All</a>
+
+<a href="/wardrobe?category=tops"
+class="chip">👕 Tops</a>
+
+<a href="/wardrobe?category=bottoms"
+class="chip">👖 Bottoms</a>
+
+<a href="/wardrobe?category=dresses"
+class="chip">👗 Dresses</a>
+
+<a href="/wardrobe?category=shoes"
+class="chip">👟 Shoes</a>
+
+<a href="/wardrobe?category=accessories"
+class="chip">👜 Accessories</a>
+
+</div>
+
+<div class="gallery">
+
+{% for item in clothes %}
+
+<div class="card">
+
+<img src="{{ item.path }}">
+
+<div class="card-body">
+
+<p class="category">
+{{ item.category.upper() }}
+</p>
+
+<div class="action-buttons">
+
+<a href="/favorite/{{ loop.index0 }}"
+class="favorite-btn">
+
+{% if item.favorite %}
+❤️ Favorited
+{% else %}
+🤍 Favorite
+{% endif %}
+
+</a>
+
+<a href="/delete_outfit/{{ loop.index0 }}"
+class="delete-btn">
+
+🗑 Delete
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+</div>
+
+<a href="/dashboard" class="back-btn">
+🏠 Back To Dashboard
+</a>
+
+</body>
+</html>

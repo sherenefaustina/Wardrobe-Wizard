@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wardrobe Wizard - Dashboard</title>
+
+  <style>
+    /* General styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #000000, #ff69b4);
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    /* Welcome text */
+    #dashboard-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      /*color: #DE3163;*/
+      color: goldenrod;
+      margin-top: 100px;
+      animation: slideIn 1s ease-in-out;
+      text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    #quote {
+      font-size: 1.5rem;
+      color: #fff;
+      font-style: italic;
+      margin-top: 10px;
+      text-shadow: 0 0 5px #fff, 0 0 10px #ff6f61, 0 0 15px #ff3b2f;
+      animation: waveText 3s infinite ease-in-out, glowEffect 1.5s ease-in-out infinite alternate;
+      display: inline-block;
+    }
+
+    .logout-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 1.2em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.4s ease-in-out;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .logout-button:hover {
+      background: white;
+      color: #DE3163;
+      border-color: white;
+      text-decoration: none;
+    }
+
+    @keyframes waveText {
+      0% { transform: translateX(-10px); }
+      50% { transform: translateX(10px); }
+      100% { transform: translateX(-10px); }
+    }
+
+    @keyframes glowEffect {
+      from { text-shadow: 0 0 5px #fff, 0 0 10px #ff6f61, 0 0 15px #ff3b2f; }
+      to { text-shadow: 0 0 10px #fff, 0 0 20px #ff6f61, 0 0 25px #ff3b2f; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+  .dashboard-card {
+  background: none;
+  border-radius: 15px;
+  width: 220px;
+  height: 260px;
+  perspective: 1000px;
+  box-sizing: border-box;
+   }
+
+    
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.dashboard-card:hover .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  backdrop-filter: blur(8px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+    
+.card-front .icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 15px;
+}
+
+
+.card-front p,
+.card-back {
+  font-size: 1.1em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+    .feature-card p {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: white;
+      margin-top: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <h1 id="dashboard-title">Welcome, {{ username }}</h1>
+  <p id="quote"></p>
+
+  <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+
+  <script>
+    const quotes = [
+      "Believe in yourself and all that you are!",
+      "The best way to predict the future is to create it.",
+      "Push yourself, because no one else is going to do it for you.",
+      "Dream big and dare to fail!",
+      "Your only limit is your mind.",
+      "Don't stop when you're tired, stop when you're done!"
+    ];
+    document.getElementById("quote").innerText = quotes[Math.floor(Math.random() * quotes.length)];
+  </script>
+
+  <div class="card-container">
+    <div class="dashboard-card">
+      <div class="card-inner">
+        <div class="card-front">
+          <img src="https://cdn-icons-png.flaticon.com/128/3050/3050253.png" class="icon" />
+          
+          <p><strong>AI-Based Outfit Matching 🤖</strong></p>
+          
+        </div>
+        <div class="card-back">
+          Uses ML to suggest outfits based on your style!
+          <a href="/match" class="btn">Try Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="card-inner">
+        <div class="card-front">
+          <img src="https://cdn-icons-png.flaticon.com/128/3222/3222800.png" class="icon" />
+          <p><strong>Weather & Event-Based Recommendations 🌦️</strong></p>
+        </div>
+        <div class="card-back">
+          Picks outfits suited for weather & occasions!
+          
+          <a href="{{ url_for('recommend_page') }}" style="color: blue; text-decoration: underline; font-weight: 500;">
+            Try Now
+          </a>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="card-inner">
+        <div class="card-front">
+          <img src="https://cdn-icons-png.flaticon.com/512/742/742751.png" class="icon" />
+          <p><strong>Mood & Emotion-Based Dressing 😊</strong></p>
+        </div>
+        <div class="card-back">
+          Outfit suggestions based on how you feel!
+          <a href="/mood" class="btn">Try Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="card-inner">
+        <div class="card-front">
+          <img src="https://cdn-icons-png.flaticon.com/128/11231/11231888.png" class="icon" />
+          <p><strong>Virtual Try-On (AR) 🤳</strong></p>
+        </div>
+        <div class="card-back">
+          Try clothes virtually using AR technology!
+          <a href="{{ url_for('virtual_tryon.tryon') }}" class="btn">Try Now</a>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="card-inner">
+        <div class="card-front">
+          <img src="https://cdn-icons-png.flaticon.com/128/18200/18200388.png" class="icon" />
+          <p><strong>AI Wardrobe Organizer 👚</strong></p>
+          
+        </div>
+        <div class="card-back">
+          Automatically organizes your digital wardrobe!
+          <a href="/wardrobe" class="btn">Try Now</a>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="card-inner">
+        <div class="card-front">
+          <img src="https://cdn-icons-png.flaticon.com/128/4647/4647516.png" class="icon" />
+          <p><strong>AI Fashion Trend Integration 🔥</strong></p>
+        </div>
+        <div class="card-back">
+          Stay updated with current fashion trends!
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="card-inner">
+        <div class="card-front">
+          <img src="https://cdn-icons-png.flaticon.com/128/10793/10793327.png" class="icon" />
+          <p><strong>AI-Generated Outfits (GANs) 🎨</strong></p>
+        </div>
+        <div class="card-back">
+          AI designs unique outfit combinations!
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

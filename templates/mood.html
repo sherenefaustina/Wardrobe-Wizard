@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Mood Detection | Wardrobe Wizard</title>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- Icons library -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom, rgba(255, 105, 180, 0.7), rgba(139, 0, 0, 0.8));
+             background-size: cover;
+             background-position: center center;
+            /*background: linear-gradient(to right, #a1c4fd, #c2e9fb);*/
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            color: white;
+            text-shadow: 2px 2px 4px #00000066;
+            margin-bottom: 30px;
+        }
+
+        #video {
+            width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px #8b0000cc, 0 0 40px #8b0000cc, 0 0 60px #8b0000cc;
+            animation: pulse 2s infinite;
+            display: block;
+            margin: 0 auto;
+        }
+
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px #8b0000cc, 0 0 20px  #8b0000cc, 0 0 30px #8b0000cc;
+            }
+            50% {
+                box-shadow: 0 0 20px #8b0000cc, 0 0 40px #8b0000cc, 0 0 60px #8b0000cc;
+            
+            }
+            100% {
+                box-shadow: 0 0 10px #8b0000cc, 0 0 20px #8b0000cc, 0 0 30px #8b0000cc;
+            }
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, rgba(255, 75, 140, 0.9) 0%, rgba(255, 85, 179, 0.9) 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin-top: 15px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease 0s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button i {
+            font-size: 1.2em;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, rgba(255, 50, 80, 0.9) 0%, rgba(255, 60, 100, 0.9) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: scale(0.95);
+            box-shadow: rgba(139, 0, 0, 0.8);
+            box-shadow: 0 0 20px #8b0000cc, 0 0 30px #8b0000cc, 0 0 40px #8b0000cc;
+            background: linear-gradient(135deg, #8b0000cc 0%, #8b0000cc 100%);
+            transition: all 0.2s ease;
+        }
+
+        #moodResult {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 25px;
+            border-radius: 20px;
+            display: inline-block;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            max-width: 90%;
+        }
+
+        /* Spinner styles */
+        #loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #8b0000cc;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #videoContainer {
+            position: relative;
+            min-height: 200px;
+        }
+
+        /* Fade-in animation for moodResult */
+.fade-in {
+    animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Spinner fade out */
+#loader {
+    transition: opacity 0.5s ease;
+}
+
+/* Video fade in */
+#video {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Mood Result Fade In */
+.fade-in {
+    animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+    </style>
+</head>
+<body>
+
+<h1>Dress Your Mood 👗🎭</h1>
+
+<!-- Video Container -->
+<div id="videoContainer">
+    <div id="loader"></div> <!-- Spinner -->
+    <video id="video" autoplay style="display:none;"></video>
+    <canvas id="canvas"></canvas>
+</div>
+
+<div class="button-container">
+    <button onclick="captureImage()">
+        <i class="bi bi-camera"></i> Frame the Mood
+    </button>
+    <button onclick="startRecording()">
+        <i class="bi bi-mic"></i> Echo the Mood
+    </button>
+    <button onclick="stopRecording()">
+        <i class="bi bi-stop-circle"></i> Pause the Mood
+    </button>
+</div>
+
+<p id="moodResult"></p>
+
+<script>
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.getElementById('video');
+            video.srcObject = stream;
+
+            // When the video is ready, hide loader and show video with smooth fade
+            video.onloadedmetadata = () => {
+                document.getElementById('loader').style.opacity = 0;
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    video.style.display = 'block';
+                    video.style.opacity = 1;
+                }, 500); // slight delay for smooth effect
+            };
+        } catch (err) {
+            console.error('Error accessing camera:', err);
+            alert('Please allow camera access to continue.');
+        }
+    }
+
+    // Function to show mood result with fade animation
+    function showMoodResult(moodText) {
+        const moodResult = document.getElementById('moodResult');
+        moodResult.innerText = moodText;
+        moodResult.classList.remove('fade-in'); 
+        void moodResult.offsetWidth; 
+        moodResult.classList.add('fade-in'); 
+    }
+
+    startCamera();
+</script>
+
+
+</body>
+</html>

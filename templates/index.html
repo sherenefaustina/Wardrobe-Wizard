@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wardrobe Wizard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script defer src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>
+    <div class="background-slider"></div>
+
+    <div class="container">
+        <h1 class="title">Wardrobe Wizard</h1>
+        
+        <h3 class="sub-tagline">Your AI Stylist for Every Occasion!</h3>
+
+        <div class="buttons">
+            <button id="signupBtn">Sign Up</button>
+            <button id="loginBtn">Login</button>
+        </div>
+
+        <div class="form-container">
+            <div class="form-box" id="formBox">
+                <!-- Signup Form -->
+                <form id="signupForm" action="/signup" method="POST">
+                    <h2>Sign Up</h2>
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" id="password" required>
+                    <span id="password-strength"></span>
+                    <button type="submit">Sign Up</button>
+                    <p>Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+                </form>
+
+                <!-- Login Form -->
+                <form id="loginForm" action="/login" method="POST">
+                    <h2>Login</h2>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Virtual Try-On</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: url("static/images/multi_back.jpg") no-repeat center center fixed;
+      background-blend-mode: overlay;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    
+
+    h1 {
+      font-size: 2.8rem;
+      color: #444;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 4px #fff;
+    }
+
+    #tryon {
+      border-radius: 18px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+      width: 560px;
+      height: 420px;
+      border: 6px solid #ffb6b9;
+      background-color: #fff;
+    }
+
+    .btn-group {
+      margin-top: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    button {
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: #333;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 2px 3px 8px rgba(0,0,0,0.15);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      transform: translateY(-3px);
+    }
+
+    #message {
+      margin-top: 15px;
+      color: #444;
+      font-size: 1rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 6px 15px;
+      border-radius: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .animated-btn {
+  position: relative;
+  display: inline-block;
+  padding: 12px 30px;
+  font-size: 1rem;
+  color: white;
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 1;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.animated-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10.01%);
+  background-size: 10px 10px;
+  animation: shimmer 4s linear infinite;
+  z-index: 0;
+}
+
+.animated-btn:hover {
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #00c9a7, #92fe9d);
+  box-shadow: 0 8px 25px rgba(0, 201, 167, 0.4);
+}
+
+
+.animated-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0 0; }
+  100% { background-position: 100% 100%; }
+}
+
+  </style>
+</head>
+<body>
+
+  <h1>👕 Virtual Try-On</h1>
+
+  <img id="tryon" src="{{ url_for('virtual_tryon.virtual_tryon_feed') }}" />
+
+  <div class="btn-group">
+  <button class="animated-btn" onclick="switchOutfit()">
+    <span>🔁 Switch Outfit</span>
+  </button>
+  <button class="animated-btn" onclick="saveSnapshot()">
+    <span>🖼️ Save Image</span>
+  </button>
+  <form action="{{ url_for('dashboard') }}" style="display: inline;">
+    <button class="animated-btn" type="submit">
+      <span>⬅️ Back to Dashboard</span>
+    </button>
+  </form>
+</div>
+
+
+  <p id="message"></p>
+
+  <script>
+    function switchOutfit() {
+      fetch("{{ url_for('virtual_tryon.switch_outfit') }}", { method: "POST" })
+        .then(() => {
+          document.getElementById("message").innerText = "Outfit switched!";
+          setTimeout(() => document.getElementById("message").innerText = "", 2000);
+        });
+    }
+
+    function saveSnapshot() {
+      fetch("{{ url_for('virtual_tryon.capture_image') }}")
+        .then(response => response.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'snapshot.jpg';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        });
+    }
+  </script>
+
+</body>
+</html>
