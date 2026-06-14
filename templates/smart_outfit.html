@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Smart Outfit Generator</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI';
+}
+
+body{
+
+min-height:100vh;
+
+background:url("{{ url_for('static', filename='images/multi_back.jpg') }}");
+
+background-size:cover;
+
+background-position:center;
+
+padding:40px;
+}
+
+.overlay{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:rgba(0,0,0,.55);
+
+z-index:-1;
+}
+
+.title{
+
+text-align:center;
+
+font-size:4rem;
+
+color:white;
+
+margin-bottom:30px;
+
+text-shadow:
+0 0 20px hotpink;
+
+animation:float 3s infinite;
+}
+
+@keyframes float{
+
+50%{
+transform:
+translateY(-8px);
+}
+
+}
+
+.generator{
+
+max-width:900px;
+
+margin:auto;
+
+background:
+rgba(255,255,255,.12);
+
+backdrop-filter:blur(18px);
+
+padding:35px;
+
+border-radius:30px;
+}
+
+form{
+
+display:flex;
+
+gap:15px;
+
+justify-content:center;
+
+flex-wrap:wrap;
+}
+
+select{
+
+padding:15px;
+
+border:none;
+
+border-radius:15px;
+
+font-size:16px;
+}
+
+button{
+
+padding:15px 30px;
+
+border:none;
+
+border-radius:40px;
+
+background:
+linear-gradient(
+45deg,
+#ff4e8d,
+#ff9a44
+);
+
+color:white;
+
+font-size:16px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:.4s;
+}
+
+button:hover{
+
+transform:
+translateY(-5px)
+scale(1.05);
+
+}
+
+.result{
+
+margin-top:40px;
+
+display:grid;
+
+grid-template-columns:
+repeat(
+auto-fit,
+minmax(250px,1fr)
+);
+
+gap:25px;
+}
+
+.card{
+
+background:white;
+
+padding:25px;
+
+border-radius:25px;
+
+transition:.4s;
+}
+
+.card:hover{
+
+transform:
+translateY(-10px);
+}
+
+.score{
+
+font-size:4rem;
+
+font-weight:bold;
+
+text-align:center;
+
+color:#ff4e8d;
+}
+
+.back{
+
+display:block;
+
+width:260px;
+
+margin:40px auto;
+
+text-align:center;
+
+padding:15px;
+
+border-radius:40px;
+
+text-decoration:none;
+
+background:
+linear-gradient(
+45deg,
+#00c6ff,
+#0072ff
+);
+
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<h1 class="title">
+
+✨ Smart Outfit Generator
+
+</h1>
+
+<div class="generator">
+
+<form
+action="/generate-smart-outfit"
+method="POST"
+>
+
+<select name="occasion">
+
+<option value="college">
+🎓 College
+</option>
+
+<option value="party">
+🎉 Party
+</option>
+
+<option value="gym">
+💪 Gym
+</option>
+
+</select>
+
+<select name="mood">
+
+<option value="happy">
+😊 Happy
+</option>
+
+<option value="neutral">
+😐 Neutral
+</option>
+
+<option value="sad">
+😔 Sad
+</option>
+
+</select>
+
+<select name="weather">
+
+<option>
+☀ Sunny
+</option>
+
+<option>
+🌧 Rainy
+</option>
+
+<option>
+❄ Cold
+</option>
+
+</select>
+
+<button>
+
+✨ Generate Outfit
+
+</button>
+
+</form>
+
+{% if outfit %}
+
+<div class="result">
+
+<div class="card">
+
+<h2>
+👕 Top
+</h2>
+
+<p>
+{{ outfit.top }}
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>
+👖 Bottom
+</h2>
+
+<p>
+{{ outfit.bottom }}
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>
+👟 Shoes
+</h2>
+
+<p>
+{{ outfit.shoes }}
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>
+⌚ Accessory
+</h2>
+
+<p>
+{{ outfit.accessory }}
+</p>
+
+</div>
+
+</div>
+
+<div class="score">
+
+{{ outfit.score }}%
+
+</div>
+
+{% endif %}
+
+</div>
+
+<a
+href="/dashboard"
+class="back"
+>
+
+🏠 Back To Dashboard
+
+</a>
+
+</body>
+</html>

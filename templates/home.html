@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wardrobe Wizard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Montserrat',sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+
+background:
+linear-gradient(
+135deg,
+#0f172a,
+#1e1b4b,
+#312e81,
+#0f172a
+);
+
+overflow-x:hidden;
+
+}
+
+/* HERO */
+
+.hero{
+
+height:100vh;
+
+background:
+linear-gradient(
+rgba(0,0,0,.45),
+rgba(0,0,0,.45)
+),
+
+url("{{ url_for('static', filename='images/multi_back.jpg') }}");
+
+background-size:cover;
+background-position:center;
+
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+flex-direction:column;
+}
+
+.hero h1{
+
+font-size:5rem;
+color:white;
+font-family:'Cinzel',serif;
+letter-spacing:6px;
+text-transform:uppercase;
+
+text-shadow:
+0 0 15px hotpink,
+0 0 30px hotpink;
+
+animation:glow 2s infinite alternate;
+
+}
+
+@keyframes glow{
+
+from{
+text-shadow:
+0 0 15px hotpink;
+}
+
+to{
+text-shadow:
+0 0 40px cyan;
+}
+
+}
+
+.hero p{
+
+font-size:1.5rem;
+color:white;
+margin-top:20px;
+
+}
+
+.enter-btn{
+
+margin-top:40px;
+
+padding:18px 45px;
+
+border:none;
+border-radius:50px;
+
+font-size:18px;
+font-weight:bold;
+
+cursor:pointer;
+
+background:
+linear-gradient(
+45deg,
+#ff4e8d,
+#ff9a44
+);
+
+color:white;
+
+transition:.4s;
+
+}
+
+.enter-btn:hover{
+
+transform:
+translateY(-5px)
+scale(1.05);
+
+box-shadow:
+0 0 25px hotpink;
+
+}
+
+/* HEADER */
+
+header{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+
+padding:20px 60px;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+background:
+rgba(0,0,0,.25);
+
+backdrop-filter:blur(10px);
+
+z-index:1000;
+
+}
+
+.logo{
+
+font-size:2rem;
+font-weight:bold;
+color:white;
+
+}
+
+nav a{
+
+color:white;
+text-decoration:none;
+margin-left:25px;
+font-weight:500;
+
+}
+
+nav a:hover{
+
+color:hotpink;
+
+}
+
+/* SECTION */
+
+section{
+
+padding:100px 10%;
+
+}
+
+.section-title{
+
+text-align:center;
+font-size:3rem;
+margin-bottom:60px;
+color:white;
+
+text-shadow:
+0 0 15px rgba(255,255,255,.5);
+
+}
+
+.workflow-section .section-title{
+color:white;
+}
+
+.tech .section-title{
+color:white;
+}
+
+.features .section-title{
+color:#222;
+}
+
+/* FEATURES */
+
+.features{
+
+background:#f8f9fa;
+
+}
+
+.feature-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(280px,1fr));
+
+gap:30px;
+
+}
+
+.feature-card{
+
+padding:35px;
+
+border-radius:30px;
+
+backdrop-filter:blur(20px);
+
+transition:.5s;
+
+color:white;
+
+position:relative;
+
+overflow:hidden;
+
+border:2px solid rgba(255,255,255,.15);
+
+}
+
+.feature-card h3{
+
+font-size:1.5rem;
+
+margin-bottom:15px;
+
+}
+
+.feature-card:hover{
+
+transform:
+translateY(-15px)
+scale(1.05);
+
+}
+
+.wardrobe{
+
+background:
+linear-gradient(
+135deg,
+#00e676,
+#00c853
+);
+
+}
+
+.mood{
+
+background:
+linear-gradient(
+135deg,
+#ffca28,
+#ff8f00
+);
+
+}
+
+.weather{
+
+background:
+linear-gradient(
+135deg,
+#29b6f6,
+#0288d1
+);
+
+}
+
+.trends{
+
+background:
+linear-gradient(
+135deg,
+#ff66c4,
+#e91e63
+);
+
+}
+
+.tryon{
+
+background:
+linear-gradient(
+135deg,
+#ab47bc,
+#6a1b9a
+);
+
+}
+
+.generator{
+
+background:
+linear-gradient(
+135deg,
+#ff7043,
+#d84315
+);
+
+}
+
+.feature-card h3{
+
+color:white;
+
+}
+
+.feature-card p{
+
+color:#ddd;
+
+}
+
+.feature-card:hover{
+
+transform:
+translateY(-15px)
+scale(1.05);
+
+box-shadow:
+0 0 30px #ff66c4,
+0 0 60px #6f6cff;
+}
+
+.feature-card h3{
+
+margin-top:15px;
+
+}
+
+/* HOW IT WORKS */
+
+.timeline{
+
+display:flex;
+flex-direction:column;
+gap:30px;
+
+max-width:900px;
+margin:auto;
+
+}
+
+.step{
+
+background:white;
+
+padding:25px;
+
+border-left:8px solid hotpink;
+
+border-radius:15px;
+
+box-shadow:
+0 5px 15px rgba(0,0,0,.1);
+
+}
+
+/* TECH */
+
+.tech{
+
+background:
+linear-gradient(
+135deg,
+#111827,
+#1e1b4b,
+#312e81
+);
+
+}
+
+.tech-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+
+gap:30px;
+
+}
+
+.tech-card{
+
+padding:35px;
+color:white;
+
+text-align:center;
+
+border-radius:25px;
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,.15),
+rgba(255,255,255,.05)
+);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.2);
+
+transition:.5s;
+}
+
+.tech-card:nth-child(1){
+border-top:5px solid #00e676;
+}
+
+.tech-card:nth-child(2){
+border-top:5px solid #29b6f6;
+}
+
+.tech-card:nth-child(3){
+border-top:5px solid #ffca28;
+}
+
+.tech-card:nth-child(4){
+border-top:5px solid #ff66c4;
+}
+
+.tech-card:nth-child(5){
+border-top:5px solid #ab47bc;
+}
+
+.tech-card:nth-child(6){
+border-top:5px solid #ff7043;
+}
+
+.tech-card:hover{
+
+transform:
+translateY(-12px)
+scale(1.05);
+
+box-shadow:
+0 0 35px rgba(255,105,180,.6);
+}
+
+/* STATS */
+
+.stats{
+
+background:
+linear-gradient(
+135deg,
+#ff4e8d,
+#8a2be2
+);
+
+color:white;
+
+}
+
+.stat-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+
+gap:30px;
+
+text-align:center;
+
+}
+
+.stat h2{
+
+font-size:4rem;
+
+}
+
+/* CTA */
+
+.cta{
+
+background:#111;
+
+text-align:center;
+
+color:white;
+
+}
+
+.cta h2{
+
+font-size:3rem;
+
+margin-bottom:20px;
+
+}
+
+.workflow-section{
+padding:120px 10%;
+text-align:center;
+background:linear-gradient(
+135deg,
+#120c56,
+#2d1b69,
+#6a11cb
+);
+position:relative;
+overflow:hidden;
+}
+
+.workflow{
+display:flex;
+justify-content:center;
+align-items:center;
+flex-wrap:wrap;
+gap:25px;
+margin-top:70px;
+}
+
+.workflow-card{
+width:220px;
+padding:30px;
+border-radius:30px;
+
+background:rgba(255,255,255,.12);
+
+backdrop-filter:blur(15px);
+
+border:1px solid rgba(255,255,255,.2);
+
+transition:.5s;
+
+animation:floatCard 4s ease-in-out infinite;
+}
+
+.workflow-card:hover{
+transform:
+translateY(-20px)
+scale(1.08);
+box-shadow:
+0 0 30px #ff66c4,
+0 0 60px #6f6cff;
+}
+
+.workflow-icon{
+font-size:60px;
+margin-bottom:15px;
+}
+
+.workflow-card h3{
+color:white;
+margin-bottom:10px;
+}
+
+.workflow-card p{
+color:#ddd;
+}
+
+.arrow{
+font-size:50px;
+color:#ff66c4;
+animation:pulseArrow 1.5s infinite;
+}
+
+@keyframes pulseArrow{
+50%{
+transform:scale(1.3);
+}
+}
+
+@keyframes floatCard{
+
+0%,100%{
+transform:translateY(0);
+}
+
+50%{
+transform:translateY(-15px);
+}
+
+}
+
+#homeContent{
+transition:0.3s;
+}
+
+/* FOOTER */
+
+footer{
+
+background:black;
+
+padding:40px;
+
+text-align:center;
+
+color:white;
+
+}
+
+/* CURTAIN */
+
+#curtain{
+
+position:fixed;
+
+bottom:-100%;
+
+left:0;
+
+width:100%;
+height:100%;
+
+background:
+linear-gradient(
+45deg,
+#ff4e8d,
+#ff9a44,
+#8a2be2
+);
+
+z-index:9999;
+
+transition:1.2s;
+
+}
+
+#curtain.open{
+
+bottom:0;
+
+}
+
+.runway{
+
+overflow:hidden;
+
+background:
+rgba(255,255,255,.08);
+
+padding:25px 0;
+
+}
+
+.runway-track{
+
+display:flex;
+
+gap:70px;
+
+font-size:1.4rem;
+
+color:white;
+
+width:max-content;
+
+animation:runway 25s linear infinite;
+
+}
+
+@keyframes runway{
+
+from{
+transform:translateX(0);
+}
+
+to{
+transform:translateX(-50%);
+}
+
+}
+
+.floating{
+
+position:fixed;
+
+font-size:50px;
+
+left:5%;
+
+top:100%;
+
+animation:float 15s linear infinite;
+
+opacity:.2;
+
+}
+
+.f2{
+
+left:25%;
+
+animation-delay:4s;
+
+}
+
+.f3{
+
+left:60%;
+
+animation-delay:7s;
+
+}
+
+.f4{
+
+left:85%;
+
+animation-delay:2s;
+
+}
+
+@keyframes float{
+
+from{
+
+transform:
+translateY(0);
+
+}
+
+to{
+
+transform:
+translateY(-120vh);
+
+}
+
+}
+
+#leftDoor,
+#rightDoor{
+
+position:fixed;
+top:0;
+
+width:50%;
+height:100%;
+
+z-index:9999;
+
+background:
+linear-gradient(
+90deg,
+#6d4c41,
+#8d6e63,
+#bcaaa4
+);
+
+overflow:hidden;
+
+transition:1.5s ease-in-out;
+
+}
+
+/* Left Door */
+
+/* MAGICAL WARDROBE DOORS */
+
+/* WARDROBE DOORS */
+
+#leftDoor,
+#rightDoor{
+
+position:fixed;
+top:0;
+
+width:50%;
+height:100%;
+
+z-index:9999;
+
+display:none;
+
+background:linear-gradient(
+135deg,
+#5d4037,
+#8d6e63,
+#bcaaa4
+);
+
+overflow:hidden;
+
+transition:1.5s ease-in-out;
+
+box-shadow:
+inset 0 0 50px rgba(0,0,0,.4);
+
+}
+
+/* CLOSED POSITION */
+
+#leftDoor{
+left:0;
+}
+
+#rightDoor{
+right:0;
+}
+
+/* OPEN POSITION */
+
+.openLeft{
+transform:translateX(-100%);
+}
+
+.openRight{
+transform:translateX(100%);
+}
+
+/* WOOD PANELS */
+
+#leftDoor::before,
+#rightDoor::before{
+
+content:"";
+
+position:absolute;
+
+top:8%;
+left:10%;
+
+width:80%;
+height:84%;
+
+border:5px solid rgba(255,255,255,.15);
+
+border-radius:20px;
+
+}
+
+/* HANDLES */
+
+#leftDoor::after,
+#rightDoor::after{
+
+content:"";
+
+position:absolute;
+
+top:50%;
+
+width:22px;
+height:22px;
+
+background:gold;
+
+border-radius:50%;
+
+box-shadow:0 0 20px gold;
+
+}
+
+#leftDoor::after{
+right:30px;
+}
+
+#rightDoor::after{
+left:30px;
+}
+
+/* GOLDEN LIGHT */
+
+#closetLight{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:
+radial-gradient(
+circle,
+rgba(255,215,0,.95),
+rgba(255,200,0,.4),
+transparent 70%
+);
+
+opacity:0;
+
+pointer-events:none;
+
+z-index:9998;
+
+transition:1.5s;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="homeContent">
+
+<div class="floating">👗</div>
+<div class="floating f2">👠</div>
+<div class="floating f3">👜</div>
+<div class="floating f4">👕</div>
+
+<header>
+
+<div class="logo">
+
+👗 Wardrobe Wizard
+
+</div>
+
+<nav>
+
+<a href="#features">Features</a>
+
+<a href="#working">How It Works</a>
+
+<a href="#tech">Technology</a>
+
+<a href="#stats">Stats</a>
+
+</nav>
+
+</header>
+
+<!-- HERO -->
+
+<section class="hero">
+
+<h1>
+
+WARDROBE WIZARD
+
+</h1>
+
+<p>
+
+Your AI Fashion Stylist for Every Occasion
+
+</p>
+
+<button
+id="enterBtn"
+class="enter-btn">
+
+ENTER WARDROBE WIZARD
+
+</button>
+
+</section>
+
+<section class="runway">
+
+<div class="runway-track">
+
+<div>👗 Streetwear</div>
+
+<div>👠 Luxury</div>
+
+<div>👜 Accessories</div>
+
+<div>👖 Denim</div>
+
+<div>✨ Quiet Luxury</div>
+
+<div>🎀 Coquette</div>
+
+<div>🔥 Fashion Week</div>
+
+<div>👕 Smart Styling</div>
+
+<div>👟 Sneakers</div>
+
+<div>👗 Streetwear</div>
+
+<div>👠 Luxury</div>
+
+<div>👜 Accessories</div>
+
+</div>
+
+</section>
+
+<!-- FEATURES -->
+
+<section
+id="features"
+class="features">
+
+<h2 class="section-title">
+
+✨ Features
+
+</h2>
+
+<div class="feature-grid">
+
+<div class="feature-card wardrobe">
+<h3>👕 Smart Wardrobe</h3>
+<p>Upload and organize clothes automatically.</p>
+</div>
+
+<div class="feature-card mood">
+<h3>😊 Mood Detection</h3>
+<p>Outfits based on your emotions.</p>
+</div>
+
+<div class="feature-card weather">
+<h3>🌦 Weather Styling</h3>
+<p>AI recommends clothes based on weather.</p>
+</div>
+
+<div class="feature-card trends">
+<h3>🎨 Fashion Trends</h3>
+<p>Stay updated with latest fashion.</p>
+</div>
+
+<div class="feature-card tryon">
+<h3>🪞 Virtual Try-On</h3>
+<p>See how outfits look before wearing.</p>
+</div>
+
+<div class="feature-card generator">
+<h3>✨ Outfit Generator</h3>
+<p>Generate complete outfit combinations.</p>
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- WORKING -->
+
+<section class="workflow-section">
+
+<h2 class="section-title">
+🚀 How Wardrobe Wizard Works
+</h2>
+
+<div class="workflow">
+
+<div class="workflow-card">
+<div class="workflow-icon">📸</div>
+<h3>Upload Clothes</h3>
+<p>Add wardrobe images.</p>
+</div>
+
+<div class="arrow">➜</div>
+
+<div class="workflow-card">
+<div class="workflow-icon">🧠</div>
+<h3>AI Analysis</h3>
+<p>AI detects categories and styles.</p>
+</div>
+
+<div class="arrow">➜</div>
+
+<div class="workflow-card">
+<div class="workflow-icon">📊</div>
+<h3>Trend Matching</h3>
+<p>Compare with current fashion trends.</p>
+</div>
+
+<div class="arrow">➜</div>
+
+<div class="workflow-card">
+<div class="workflow-icon">✨</div>
+<h3>Smart Outfit</h3>
+<p>Generate complete outfit combinations.</p>
+</div>
+
+<div class="arrow">➜</div>
+
+<div class="workflow-card">
+<div class="workflow-icon">🪞</div>
+<h3>Virtual Try-On</h3>
+<p>Preview outfit before wearing.</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- TECH -->
+
+<section
+id="tech"
+class="tech">
+
+<h2 class="section-title">
+
+💻 Technology Stack
+
+</h2>
+
+<div class="tech-grid">
+
+<div class="tech-card">
+<h3>Frontend</h3>
+<p>HTML CSS JavaScript</p>
+</div>
+
+<div class="tech-card">
+<h3>Backend</h3>
+<p>Flask Python</p>
+</div>
+
+<div class="tech-card">
+<h3>Database</h3>
+<p>SQLite</p>
+</div>
+
+<div class="tech-card">
+<h3>Computer Vision</h3>
+<p>OpenCV CNN YOLO</p>
+</div>
+
+<div class="tech-card">
+<h3>AI Models</h3>
+<p>TensorFlow Keras</p>
+</div>
+
+<div class="tech-card">
+<h3>APIs</h3>
+<p>Weather Fashion RSS</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- STATS -->
+
+<section
+id="stats"
+class="stats">
+
+<h2 class="section-title" style="color:white">
+
+📊 Project Highlights
+
+</h2>
+
+<div class="stat-grid">
+
+<div class="stat">
+<h2 id="featureCounter">0</h2>
+<p>AI Features</p>
+</div>
+
+<div class="stat">
+<h2 id="accuracyCounter">0</h2>
+<p>Automated Styling</p>
+</div>
+
+<div class="stat">
+<h2 id="userCounter">0</h2>
+<p>Fashion Assistance</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- CTA -->
+
+<section class="cta">
+
+<h2>
+
+Ready to Transform Your Fashion Experience?
+
+</h2>
+
+<p>
+
+Enter the AI-powered wardrobe of the future.
+
+</p>
+
+<br>
+
+<button
+id="enterBtn2"
+class="enter-btn">
+
+GET STARTED
+
+</button>
+
+</section>
+
+<footer>
+
+👗 Wardrobe Wizard © 2026
+
+<br><br>
+
+Built with AI • Fashion • Computer Vision • Flask
+
+</footer>
+</div>
+
+<div id="closetLight"></div>
+
+<div id="leftDoor"></div>
+
+<div id="rightDoor"></div>
+
+<script>
+
+function openWardrobe(){
+
+const leftDoor =
+document.getElementById("leftDoor");
+
+const rightDoor =
+document.getElementById("rightDoor");
+
+const light =
+document.getElementById("closetLight");
+
+const home =
+document.getElementById("homeContent");
+
+/* Hide homepage */
+home.style.display="none";
+
+/* Show doors */
+leftDoor.style.display="block";
+rightDoor.style.display="block";
+
+/* Force browser render */
+void leftDoor.offsetWidth;
+
+/* Start animation immediately */
+light.style.opacity="1";
+
+leftDoor.classList.add("openLeft");
+rightDoor.classList.add("openRight");
+
+/* Redirect after opening */
+setTimeout(()=>{
+
+window.location.href="/enter";
+
+},700);
+
+}
+
+document
+.getElementById("enterBtn")
+.addEventListener(
+"click",
+openWardrobe
+);
+
+document
+.getElementById("enterBtn2")
+.addEventListener(
+"click",
+openWardrobe
+);
+
+function animateCounter(id,target){
+
+let count=0;
+
+let interval=setInterval(()=>{
+
+count++;
+
+document.getElementById(id)
+.innerHTML=count;
+
+if(count>=target){
+
+clearInterval(interval);
+
+}
+
+},20);
+
+}
+
+animateCounter(
+"featureCounter",
+7
+);
+
+animateCounter(
+"accuracyCounter",
+100
+);
+
+animateCounter(
+"userCounter",
+24
+);
+
+</script>
+
+
+
+
+</body>
+</html>

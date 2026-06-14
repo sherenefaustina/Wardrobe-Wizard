@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
+from fashion_trends import *
+from outfit_matcher import analyze_clothing
+from fashion_news import get_vogue_news
 import os
 import requests
 from mood_detector import detect_mood_from_image, detect_mood_from_audio
-
+from smart_outfit_generator import generate_outfit
 from virtual_tryon import virtual_tryon
 
 WARDROBE_DATA = []
@@ -43,6 +46,10 @@ def load_user(user_id):
 
 @app.route("/")
 def home():
+    return render_template("home.html")
+
+@app.route("/enter")
+def enter():
     return render_template("index.html")
 
 @app.route("/signup", methods=["POST"])
@@ -291,6 +298,30 @@ def wardrobe():
         stats=stats
     )
 
+@app.route("/fashion-trends")
+@login_required
+def trends():
+
+    trends_data = get_fashion_trends()
+
+    vogue_news = get_vogue_news()
+
+    return render_template(
+        "fashion_trends.html",
+        trends=trends_data,
+        news=vogue_news
+    )
+
+@app.route("/trend-score/<category>")
+@login_required
+def trend_score(category):
+
+    score = calculate_trend_score(category)
+
+    return jsonify({
+        "score": score
+    })
+
 @app.route("/favorite/<int:index>")
 @login_required
 def favorite(index):
@@ -312,7 +343,45 @@ def mood_to_outfit(mood):
     else:
         return "Couldn't detect mood. Wear what makes you comfortable!"
    
+@app.route("/smart-outfit")
+@login_required
+def smart_outfit():
 
+    return render_template(
+        "smart_outfit.html",
+        outfit=None
+    )
+
+
+@app.route(
+"/generate-smart-outfit",
+methods=["POST"]
+)
+@login_required
+def generate_smart_outfit():
+
+    occasion = request.form.get(
+        "occasion"
+    )
+
+    mood = request.form.get(
+        "mood"
+    )
+
+    weather = request.form.get(
+        "weather"
+    )
+
+    outfit = generate_outfit(
+        occasion,
+        mood,
+        weather
+    )
+
+    return render_template(
+        "smart_outfit.html",
+        outfit=outfit
+    )
 
 
 if __name__ == "__main__":

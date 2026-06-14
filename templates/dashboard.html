@@ -163,6 +163,27 @@
       margin-top: 10px;
     }
 
+.btn{
+display:inline-block;
+margin-top:15px;
+padding:10px 22px;
+border-radius:30px;
+text-decoration:none;
+font-weight:bold;
+color:white;
+background:linear-gradient(
+45deg,
+#ff4e8d,
+#ff9a44
+);
+transition:.4s;
+}
+
+.btn:hover{
+transform:scale(1.08);
+box-shadow:0 0 20px #ff69b4;
+}
+
   </style>
 </head>
 <body>
@@ -266,21 +287,29 @@
         </div>
         <div class="card-back">
           Stay updated with current fashion trends!
+          <a href="/fashion-trends" class="btn">Try Now</a>
         </div>
       </div>
     </div>
 
     <div class="dashboard-card">
-      <div class="card-inner">
-        <div class="card-front">
-          <img src="https://cdn-icons-png.flaticon.com/128/10793/10793327.png" class="icon" />
-          <p><strong>AI-Generated Outfits (GANs) 🎨</strong></p>
-        </div>
-        <div class="card-back">
-          AI designs unique outfit combinations!
-        </div>
-      </div>
+  <div class="card-inner">
+
+    <div class="card-front">
+      <img src="https://cdn-icons-png.flaticon.com/128/10793/10793327.png" class="icon" />
+      <p><strong>AI-Generated Outfits (GANs) 🎨</strong></p>
     </div>
+
+    <div class="card-back">
+      <p>AI designs unique outfit combinations!</p>
+
+      <a href="/smart-outfit" class="btn">
+        Try Now
+      </a>
+
+    </div>
+
   </div>
+</div>
 </body>
 </html>
